@@ -2,8 +2,10 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\PlantController;
 
 Route::apiResource('categories', CategoryController::class);
+Route::apiResource('plants', PlantController::class);
 
 // use App\Http\Controllers\Api\AuthController;
 // use App\Http\Controllers\Api\CategoryController;
