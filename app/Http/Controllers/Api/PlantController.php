@@ -14,7 +14,12 @@ class PlantController extends Controller
      */
     public function index()
     {
-        //
+        $plants = Plant::latest()->paginate(2);
+
+        return response()->json([
+            'success' => true,
+            'data' => $plants
+        ]);
     }
 
     /**
@@ -22,7 +27,31 @@ class PlantController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'category_id' => 'required|exists:categories,id',
+            'scientific_name' => 'nullable|string|max:255',
+            'price' => 'required|numeric|min:0',
+            'stock' => 'required|integer|min:0',
+            'height' => 'nullable|string|max:255',
+            'age' => 'nullable|string|max:255',
+            'watering' => 'nullable|string|max:255',
+            'sunlight' => 'nullable|string|max:255',
+        ]);
+
+        if ($request->hasFile('image')) {
+            $validated['image'] = $request->file('image')->store('plants', 'public');
+        }
+
+        $plant = Plant::create($validated);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Plant created successfully.',
+            'data' => $plant
+        ], 201);
     }
 
     /**
@@ -30,7 +59,18 @@ class PlantController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $plant = Plant::find($id);
+        if (!$plant) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Plant not found'
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => $plant
+        ]);
     }
 
     /**
@@ -38,7 +78,43 @@ class PlantController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $plant = Plant::find($id);
+        if (!$plant) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Plant not found'
+            ], 404);
+        }
+
+        $validated = $request->validate([
+            'name' => 'sometimes|required|string|max:255',
+            'description' => 'nullable|string',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'category_id' => 'sometimes|required|exists:categories,id',
+            'scientific_name' => 'nullable|string|max:255',
+            'price' => 'sometimes|required|numeric|min:0',
+            'stock' => 'sometimes|required|integer|min:0',
+            'height' => 'nullable|string|max:255',
+            'age' => 'nullable|string|max:255',
+            'watering' => 'nullable|string|max:255',
+            'sunlight' => 'nullable|string|max:255',
+        ]);
+
+        if ($request->hasFile('image')) {
+            // Delete the old image if it exists
+            if ($plant->image && Storage::disk('public')->exists($plant->image)) {
+                Storage::disk('public')->delete($plant->image);
+            }
+            $validated['image'] = $request->file('image')->store('plants', 'public');
+        }
+
+        $plant->update($validated);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Plant updated successfully.',
+            'data' => $plant
+        ]);
     }
 
     /**
