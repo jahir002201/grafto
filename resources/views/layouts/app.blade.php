@@ -60,7 +60,22 @@
             <h1 class="text-2xl font-bold text-gray-700">
                 Grafto Nursery Dashboard
             </h1>
-
+<!-- login/logout button -->
+            <div class="flex items-center space-x-4">
+                @auth
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit"
+                                class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 focus:outline-none focus:ring focus:border-blue-500">
+                            Logout
+                        </button>
+                    </form>
+                @else
+                    <a href="{{ route('login') }}"
+                       class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 focus:outline-none focus:ring focus:border-blue-500">
+                        Login
+                    </a>
+                @endauth
             <div class="text-gray-600">
                 <img src="{{ url('https://my-portfolio-smoky-xi-63.vercel.app/_next/image?url=%2Fimages%2FJahir.jpg&w=96&q=75') }}" alt="Profile" class="w-10 h-10 rounded-full">
             </div>
