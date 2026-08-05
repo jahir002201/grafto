@@ -60,26 +60,73 @@
             <h1 class="text-2xl font-bold text-gray-700">
                 Grafto Nursery Dashboard
             </h1>
-<!-- login/logout button -->
-            <div class="flex items-center space-x-4">
-                @auth
-                    <form method="POST" action="{{ route('logout') }}">
-                        @csrf
-                        <button type="submit"
-                                class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 focus:outline-none focus:ring focus:border-blue-500">
-                            Logout
-                        </button>
-                    </form>
-                @else
-                    <a href="{{ route('login') }}"
-                       class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 focus:outline-none focus:ring focus:border-blue-500">
-                        Login
-                    </a>
-                @endauth
-            <div class="text-gray-600">
-                <img src="{{ url('https://my-portfolio-smoky-xi-63.vercel.app/_next/image?url=%2Fimages%2FJahir.jpg&w=96&q=75') }}" alt="Profile" class="w-10 h-10 rounded-full">
+
+            <div class="relative">
+
+            <button
+                onclick="document.getElementById('profileMenu').classList.toggle('hidden')"
+                class="flex items-center justify-center w-10 h-10 rounded-full bg-green-700 text-white font-bold uppercase">
+
+                {{ strtoupper(substr(Auth::user()->name ?? 'U', 0, 2)) }}
+
+            </button>
+
+            <div
+                id="profileMenu"
+                class="hidden absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg border">
+
+                <div class="px-4 py-3 border-b">
+
+                    <p class="font-semibold text-gray-700">
+                        {{ Auth::user()->name }}
+                    </p>
+
+                    <p class="text-sm text-gray-500">
+                        {{ Auth::user()->email }}
+                    </p>
+
+                </div>
+
+                <a
+                    href="{{ route('dashboard.profile.show') }}"
+                    class="block px-4 py-2 hover:bg-gray-100">
+
+                    My Profile
+
+                </a>
+
+                <a
+                    href="{{ route('dashboard.profile.edit') }}"
+                    class="block px-4 py-2 hover:bg-gray-100">
+
+                    Edit Profile
+
+                </a>
+
+                <a
+                    href="{{ route('dashboard.profile.password') }}"
+                    class="block px-4 py-2 hover:bg-gray-100">
+
+                    Change Password
+
+                </a>
+
+                <form action="{{ route('logout') }}" method="POST">
+
+                    @csrf
+
+                    <button
+                        class="w-full text-left px-4 py-2 text-red-600 hover:bg-red-50">
+
+                        Logout
+
+                    </button>
+
+                </form>
+
             </div>
 
+        </div>
         </header>
 
         <main class="p-8">
