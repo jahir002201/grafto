@@ -114,6 +114,11 @@ Start development server
 ```bash
 php artisan serve
 ```
+API Docs → Dedoc Scramble
+
+```bash
+http://127.0.0.1:8000/docs/api
+```
 
 ---
 
