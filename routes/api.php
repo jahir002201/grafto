@@ -18,6 +18,8 @@ Route::middleware('auth:api')->group(function () {
     Route::post('logout', [AuthController::class, 'logout']);
     Route::get('me', [AuthController::class, 'me']);
     Route::get('users', [AuthController::class, 'users']);
+    Route::apiResource('profile', ProfileController::class)->only(['show', 'edit', 'update']);
+    Route::post('profile/password', [ProfileController::class, 'updatePassword']);
 
     Route::apiResource('categories', CategoryController::class)->except(['index', 'show']);
     Route::apiResource('plants', PlantController::class)->except(['index', 'show']);
