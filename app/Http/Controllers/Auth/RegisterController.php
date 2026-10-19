@@ -27,6 +27,7 @@ class RegisterController extends Controller
             'name' => $validated['name'],
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
+            'role' => 'customer', // Set the default role to 'customer'
         ]);
 
         Auth::guard('web')->login($user);

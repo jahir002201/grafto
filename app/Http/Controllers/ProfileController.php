@@ -5,61 +5,110 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 
 class ProfileController extends Controller
 {
-    public function show()
+    public function show(Request $request)
     {
         $user = Auth::user();
+
+        if($request->routeIs('home.profile.show')) {
+            return view('Home.profile', compact('user'));
+        }
+
         return view('profile.show', compact('user'));
     }
 
-    public function edit()
+    public function edit(Request $request)
     {
         $user = Auth::user();
+
+        if($request->routeIs('home.profile.edit')) {
+            return view('Home.edit', compact('user'));
+        }
+
         return view('profile.edit', compact('user'));
     }
 
     public function update(Request $request)
     {
-        // Validate the incoming request data
+        $user = $request->user();
+
         $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email,' . auth()->id(),
-            // Add other fields as necessary
+            'name' => ['required', 'string', 'max:255'],
+            'email' => [
+                'required',
+                'string',
+                'email',
+                'max:255',
+                Rule::unique('users', 'email')->ignore($user->id),
+            ],
+            'address' => ['nullable', 'string', 'max:1000'],
+            'phone' => ['nullable', 'string', 'max:20'],
+            'image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
         ]);
 
-        // Update the authenticated user's profile
-        $user = auth()->user();
+        // Remove the uploaded file from ordinary model update data.
+        unset($validatedData['image']);
+
+        if ($request->hasFile('image')) {
+            $oldImage = $user->image;
+
+            $validatedData['image'] = $request->file('image')
+                ->store('profiles', 'public');
+
+            if ($oldImage) {
+                Storage::disk('public')->delete($oldImage);
+            }
+        }
+
         $user->update($validatedData);
 
-        return redirect()->route('dashboard.profile.show')->with('success', 'Profile updated successfully.');
+        // Return to the profile page the user came from.
+        if ($request->routeIs('home.profile.update')) {
+            return redirect()->route('home.profile.show')
+                ->with('success', 'Profile updated successfully.');
+        }
+
+        return redirect()->route('dashboard.profile.show')
+            ->with('success', 'Profile updated successfully.');
     }
 
-    public function password()
+    public function password(Request $request)
     {
+        if (request()->routeIs('home.profile.password')) {
+            return view('Home.password');
+        }
         return view('profile.password');
-    }   
+    }
 
     public function updatePassword(Request $request)
     {
-        // Validate the incoming request data
         $validatedData = $request->validate([
-            'current_password' => 'required|string',
-            'new_password' => 'required|string|min:8|confirmed',
+            'current_password' => ['required', 'string'],
+            'new_password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
 
-        $user = auth()->user();
+        $user = $request->user();
 
-        // Check if the current password matches
-        if (!\Hash::check($validatedData['current_password'], $user->password)) {
-            return back()->withErrors(['current_password' => 'Current password is incorrect.']);
+        if (!Hash::check($validatedData['current_password'], $user->password)) {
+            return back()->withErrors([
+                'current_password' => 'Current password is incorrect.',
+            ]);
         }
 
-        // Update the user's password
-        $user->password = \Hash::make($validatedData['new_password']);
-        $user->save();
+        $user->update([
+            'password' => Hash::make($validatedData['new_password']),
+        ]);
 
-        return redirect()->route('dashboard.profile.show')->with('success', 'Password updated successfully.');
+        if ($request->routeIs('home.profile.update-password')) {
+            return redirect()->route('home.profile.show')
+                ->with('success', 'Password updated successfully.');
+        }
+
+        return redirect()->route('dashboard.profile.show')
+            ->with('success', 'Password updated successfully.');
     }
 }
