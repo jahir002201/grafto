@@ -91,7 +91,7 @@
                                 🪴
                             </div>
                         @endif
-
+                        <a href="{{ route('home.plants.show', $plant) }}" class="block">
                         <div class="p-5">
                             <p class="text-sm text-green-700">
                                 {{ $plant->category?->name ?? 'Nursery Plant' }}
@@ -107,6 +107,7 @@
                                 {{ $plant->stock > 0 ? 'In Stock' : 'Out of Stock' }}
                             </p>
                         </div>
+                        </a>
                     </article>
                 @empty
                     <p class="col-span-full rounded-xl bg-stone-50 p-8 text-gray-500">

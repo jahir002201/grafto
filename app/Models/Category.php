@@ -14,8 +14,8 @@ class Category extends Model
         'image',
     ];
 
-    public function products()
+    public function plants()
     {
-        return $this->hasMany(Product::class);
+        return $this->hasMany(Plant::class);
     }
 }

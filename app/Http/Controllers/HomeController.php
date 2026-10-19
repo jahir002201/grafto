@@ -14,4 +14,11 @@ class HomeController extends Controller
         $plants = Plant::latest()->get();
         return view('home', compact('categories', 'plants'));
     }
+
+    public function show(Plant $plant)
+    {
+        $plant->load('category');
+        return view('Home.show', compact('plant'));
+    }
+    
 }
