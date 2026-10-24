@@ -84,6 +84,51 @@
                     </p>
                 @endif
             </div>
+            @if ($plant->stock > 0)
+                <form
+                    action="{{ route('payment.plant.checkout', $plant) }}"
+                    method="POST"
+                    class="mt-6 space-y-4"
+                >
+                    @csrf
+
+                    <div>
+                        <label for="quantity" class="block font-semibold text-gray-700">
+                            Quantity
+                        </label>
+
+                        <input
+                            id="quantity"
+                            type="number"
+                            name="quantity"
+                            value="1"
+                            min="1"
+                            max="{{ $plant->stock }}"
+                            required
+                            class="mt-2 w-24 rounded-lg border border-gray-300 px-3 py-2"
+                        >
+
+                        @error('quantity')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <button
+                        type="submit"
+                        class="w-full rounded-xl bg-green-700 px-6 py-3 font-bold text-white hover:bg-green-800 sm:w-auto"
+                    >
+                        Buy Now — ৳{{ number_format((float) $plant->price, 2) }}
+                    </button>
+                </form>
+            @else
+                <button
+                    type="button"
+                    disabled
+                    class="mt-6 cursor-not-allowed rounded-xl bg-gray-300 px-6 py-3 font-bold text-gray-600"
+                >
+                    Out of Stock
+                </button>
+            @endif
 
         </div>
     </div>

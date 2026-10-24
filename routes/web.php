@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PaymentController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\PlantController;
@@ -73,9 +74,6 @@ Route::middleware('auth')->group(function () {
         ->name('customer.')
         ->group(function () {
 
-            Route::view('/dashboard', 'customer.dashboard')
-                ->name('dashboard');
-
             Route::prefix('profile')->name('profile.')->group(function () {
                 Route::get('/show', [ProfileController::class, 'show'])
                     ->name('show');
@@ -94,3 +92,33 @@ Route::middleware('auth')->group(function () {
             });
         });
 });
+
+// Customer must be logged in to purchase a plant.
+Route::middleware(['auth', 'role:customer'])->group(function () {
+    Route::post('/plants/{plant}/checkout', [
+        PaymentController::class,
+        'checkout',
+    ])->name('payment.plant.checkout');
+});
+
+// SSLCOMMERZ callbacks.
+// These routes must be publicly reachable by the gateway.
+Route::post('/payment/success', [
+    PaymentController::class,
+    'success',
+])->name('payment.success');
+
+Route::post('/payment/fail', [
+    PaymentController::class,
+    'fail',
+])->name('payment.fail');
+
+Route::post('/payment/cancel', [
+    PaymentController::class,
+    'cancel',
+])->name('payment.cancel');
+
+Route::post('/payment/ipn', [
+    PaymentController::class,
+    'ipn',
+])->name('payment.ipn');

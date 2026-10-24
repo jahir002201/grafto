@@ -40,7 +40,7 @@ class LoginController extends Controller
         }
 
         if ($user->isCustomer()) {
-            return redirect()->route('customer.dashboard')
+            return redirect()->route('home.index')
                 ->with('success', 'Welcome to Grafto!');
         }
 
