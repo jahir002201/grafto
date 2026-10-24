@@ -8,7 +8,7 @@
             Plants
         </h1>
 
-        <a href="{{ route('plants.create') }}"
+        <a href="{{ route('dashboard.plants.create') }}"
            class="rounded-lg bg-blue-600 px-5 py-2.5 text-white shadow transition hover:bg-blue-700">
             + Create Plant
         </a>
@@ -47,18 +47,18 @@
 
                         <div class="flex items-center justify-between">
 
-                            <a href="{{ url('plants/' . $plant->id) }}"
+                            <a href="{{ url('dashboard/plants/' . $plant->id) }}"
                                class="font-medium text-blue-600 hover:text-blue-800">
                                 View →
                             </a>
 
                             <div class="flex gap-2">
-                                <a href="{{ route('plants.edit', $plant->id) }}"
+                                <a href="{{ route('dashboard.plants.edit', $plant->id) }}"
                                    class="rounded-lg bg-yellow-500 px-4 py-2 text-white transition hover:bg-yellow-600">
                                     Edit
                                 </a>
 
-                                <form action="{{ route('plants.destroy', $plant->id) }}"
+                                <form action="{{ route('dashboard.plants.destroy', $plant->id) }}"
                                       method="POST"
                                       onsubmit="return confirm('Delete this plant?')">
 

@@ -109,14 +109,14 @@
                     <div class="mt-8 flex flex-wrap gap-3 border-t border-gray-200 pt-6">
 
                         <a
-                            href="{{ route('home.profile.edit') }}"
+                            href="{{ route('customer.profile.edit') }}"
                             class="inline-flex items-center justify-center rounded-lg bg-green-700 px-5 py-3 font-semibold text-white transition hover:bg-green-800"
                         >
                             Edit Profile
                         </a>
 
                         <a
-                            href="{{ route('home.profile.password') }}"
+                            href="{{ route('customer.profile.password') }}"
                             class="inline-flex items-center justify-center rounded-lg bg-amber-500 px-5 py-3 font-semibold text-white transition hover:bg-amber-600"
                         >
                             Change Password

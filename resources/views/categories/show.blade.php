@@ -22,12 +22,12 @@
 
             <div class="mt-8 flex gap-3 justify-center">
 
-                <a href="{{ route('categories.edit', $category->id) }}"
+                <a href="{{ route('dashboard.categories.edit', $category->id) }}"
                    class="bg-indigo-600 text-white px-5 py-3 rounded-lg hover:bg-indigo-700">
                     Edit
                 </a>
 
-                <a href="{{ route('categories.index') }}"
+                <a href="{{ route('dashboard.categories.index') }}"
                    class="border px-5 py-3 rounded-lg hover:bg-gray-100">
                     Back
                 </a>

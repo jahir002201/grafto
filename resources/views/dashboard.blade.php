@@ -89,12 +89,12 @@
 
                 <td class="p-4 flex gap-2">
 
-                    <a href="{{ route('plants.edit', $plant->id) }}"
+                    <a href="{{ route('dashboard.plants.edit', $plant->id) }}"
                        class="rounded-lg bg-yellow-500 px-4 py-2 text-white transition hover:bg-yellow-600">
                         Edit
                     </a>
 
-                    <form action="{{ route('plants.destroy', $plant->id) }}"
+                    <form action="{{ route('dashboard.plants.destroy', $plant->id) }}"
                           method="POST"
                           class="inline-block"
                           onsubmit="return confirm('Delete this plant?')">

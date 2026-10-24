@@ -1,9 +1,9 @@
 @extends('layouts.home')
 @section('content')
     <div class="container mx-auto px-4 py-8">
-        <div class="bg-white shadow-md rounded-lg p-6">
+        <div class="bg-white shadow-md rounded-lg text-center p-6">
             <h2 class="text-2xl font-semibold mb-4">Change Password</h2>
-            <form action="{{ route('home.profile.update-password') }}" method="POST">
+            <form action="{{ route('customer.profile.update-password') }}" method="POST">
                 @csrf
                 @method('PUT')
                 <div class="mb-4">

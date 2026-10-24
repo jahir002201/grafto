@@ -2,7 +2,7 @@
 @section('content')
 <div class="max-w-2xl mx-auto mt-10 bg-white shadow-lg rounded-xl p-8">
     <h1 class="text-3xl font-bold text-gray-800 mb-6">Edit Plant</h1>
-    <form action="{{ route('plants.update', $plant->id) }}" method="POST" enctype="multipart/form-data" class="space-y-6">
+    <form action="{{ route('dashboard.plants.update', $plant->id) }}" method="POST" enctype="multipart/form-data" class="space-y-6">
         @csrf
         @method('PUT')
         <!-- Name -->
@@ -173,7 +173,7 @@
                 Update Plant
             </button>
 
-            <a href="{{ route('plants.index') }}"
+            <a href="{{ route('dashboard.plants.index') }}"
                class="rounded-lg bg-gray-300 px-5 py-2.5 text-gray-800 hover:bg-gray-400 transition">
                 Cancel
             </a>

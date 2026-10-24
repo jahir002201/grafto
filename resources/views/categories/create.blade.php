@@ -3,7 +3,7 @@
 <div class="max-w-2xl mx-auto mt-10 bg-white shadow-lg rounded-xl p-8">
     <h1 class="text-3xl font-bold text-gray-800 mb-6">Create Category</h1>
 
-    <form action="{{ route('categories.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
+    <form action="{{ route('dashboard.categories.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
         @csrf
 
         <!-- Name -->

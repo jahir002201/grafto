@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class RegisterController extends Controller
 {
@@ -19,7 +19,7 @@ class RegisterController extends Controller
     {
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'unique:users,email'],
+            'email' => ['required', 'email', 'max:255', 'unique:users,email'],
             'password' => ['required', 'confirmed', 'min:8'],
         ]);
 
@@ -27,12 +27,14 @@ class RegisterController extends Controller
             'name' => $validated['name'],
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
-            'role' => 'customer', // Set the default role to 'customer'
+            'role' => 'customer',
         ]);
 
         Auth::guard('web')->login($user);
 
-        return redirect()->route('dashboard')
-            ->with('success', 'Registration successful.');
+        $request->session()->regenerate();
+
+        return redirect()->route('customer.dashboard')
+            ->with('success', 'Registration successful. Welcome to Grafto!');
     }
 }

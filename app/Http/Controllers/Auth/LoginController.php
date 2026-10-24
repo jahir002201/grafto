@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
 
 class LoginController extends Controller
 {
@@ -17,21 +18,35 @@ class LoginController extends Controller
     {
         $credentials = $request->validate([
             'email' => ['required', 'email'],
-            'password' => ['required'],
+            'password' => ['required', 'string'],
         ]);
 
-        if (Auth::guard('web')->attempt($credentials)) {
-            $request->session()->regenerate();
-            if (Auth::user()->role === 'admin') {
-                return redirect()->intended('dashboard');
-            } else {
-                return redirect()->intended('home');
-            }
+        if (!Auth::guard('web')->attempt(
+            $credentials,
+            $request->boolean('remember')
+        )) {
+            throw ValidationException::withMessages([
+                'email' => 'Invalid email or password.',
+            ]);
         }
 
-        return back()->withErrors([
-            'email' => 'Invalid email or password.',
-        ])->onlyInput('email');
+        $request->session()->regenerate();
+
+        $user = Auth::guard('web')->user();
+
+        if ($user->isAdmin()) {
+            return redirect()->route('dashboard.index')
+                ->with('success', 'Welcome back, Admin!');
+        }
+
+        if ($user->isCustomer()) {
+            return redirect()->route('customer.dashboard')
+                ->with('success', 'Welcome to Grafto!');
+        }
+
+        Auth::guard('web')->logout();
+
+        abort(403, 'Your account has an invalid role.');
     }
 
     public function destroy(Request $request)
@@ -39,9 +54,9 @@ class LoginController extends Controller
         Auth::guard('web')->logout();
 
         $request->session()->invalidate();
-
         $request->session()->regenerateToken();
 
-        return redirect()->route('login');
+        return redirect()->route('home')
+            ->with('success', 'You have logged out successfully.');
     }
 }

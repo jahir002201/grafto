@@ -51,7 +51,7 @@ class PlantController extends Controller
             $validated['image'] = $request->file('image')->store('plants', 'public');
         }
         Plant::create($validated);
-        return redirect()->route('plants.index')->with('success', 'Plant created successfully.');
+        return redirect()->route('dashboard.plants.index')->with('success', 'Plant created successfully.');
     }
 
     /**
@@ -100,7 +100,7 @@ class PlantController extends Controller
             $validated['image'] = $request->file('image')->store('plants', 'public');
         }
         $plant->update($validated);
-        return redirect()->route('plants.index')->with('success', 'Plant updated successfully.');
+        return redirect()->route('dashboard.plants.index')->with('success', 'Plant updated successfully.');
     }
 
     /**
@@ -112,6 +112,6 @@ class PlantController extends Controller
             Storage::disk('public')->delete($plant->image);
         }
         $plant->delete();
-        return redirect()->route('plants.index')->with('success', 'Plant deleted successfully.');
+        return redirect()->route('dashboard.plants.index')->with('success', 'Plant deleted successfully.');
     }
 }

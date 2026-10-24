@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
@@ -12,21 +11,22 @@ class ProfileController extends Controller
 {
     public function show(Request $request)
     {
-        $user = Auth::user();
+        $user = $request->user();
 
-        if($request->routeIs('home.profile.show')) {
-            return view('Home.profile', compact('user'));
+        if ($request->routeIs('customer.profile.*')) {
+            return view('home.profile', compact('user'));
         }
 
         return view('profile.show', compact('user'));
+
     }
 
     public function edit(Request $request)
     {
-        $user = Auth::user();
+        $user = $request->user();
 
-        if($request->routeIs('home.profile.edit')) {
-            return view('Home.edit', compact('user'));
+        if ($request->routeIs('customer.profile.*')) {
+            return view('home.edit', compact('user'));
         }
 
         return view('profile.edit', compact('user'));
@@ -40,7 +40,6 @@ class ProfileController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => [
                 'required',
-                'string',
                 'email',
                 'max:255',
                 Rule::unique('users', 'email')->ignore($user->id),
@@ -50,14 +49,15 @@ class ProfileController extends Controller
             'image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
         ]);
 
-        // Remove the uploaded file from ordinary model update data.
+        // Keep the old image if no replacement was uploaded.
         unset($validatedData['image']);
 
         if ($request->hasFile('image')) {
             $oldImage = $user->image;
 
-            $validatedData['image'] = $request->file('image')
-                ->store('profiles', 'public');
+            $newImage = $request->file('image')->store('profiles', 'public');
+
+            $validatedData['image'] = $newImage;
 
             if ($oldImage) {
                 Storage::disk('public')->delete($oldImage);
@@ -66,9 +66,8 @@ class ProfileController extends Controller
 
         $user->update($validatedData);
 
-        // Return to the profile page the user came from.
-        if ($request->routeIs('home.profile.update')) {
-            return redirect()->route('home.profile.show')
+        if ($request->routeIs('customer.profile.*')) {
+            return redirect()->route('customer.profile.show')
                 ->with('success', 'Profile updated successfully.');
         }
 
@@ -78,9 +77,10 @@ class ProfileController extends Controller
 
     public function password(Request $request)
     {
-        if (request()->routeIs('home.profile.password')) {
-            return view('Home.password');
+        if ($request->routeIs('customer.profile.*')) {
+            return view('home.password');
         }
+
         return view('profile.password');
     }
 
@@ -88,7 +88,12 @@ class ProfileController extends Controller
     {
         $validatedData = $request->validate([
             'current_password' => ['required', 'string'],
-            'new_password' => ['required', 'string', 'min:8', 'confirmed'],
+            'new_password' => [
+                'required',
+                'string',
+                'min:8',
+                'confirmed',
+            ],
         ]);
 
         $user = $request->user();
@@ -103,8 +108,8 @@ class ProfileController extends Controller
             'password' => Hash::make($validatedData['new_password']),
         ]);
 
-        if ($request->routeIs('home.profile.update-password')) {
-            return redirect()->route('home.profile.show')
+        if ($request->routeIs('customer.profile.*')) {
+            return redirect()->route('customer.profile.show')
                 ->with('success', 'Password updated successfully.');
         }
 

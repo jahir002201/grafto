@@ -14,7 +14,7 @@
             </div>
         @endif
 
-        <form action="{{ route('home.profile.update') }}"
+        <form action="{{ route('customer.profile.update') }}"
               method="POST"
               enctype="multipart/form-data">
 
@@ -145,7 +145,7 @@
                 </button>
 
                 <a
-                    href="{{ route('home.profile.show') }}"
+                    href="{{ route('customer.profile.show') }}"
                     class="rounded-md bg-gray-200 px-5 py-2 text-gray-700
                            hover:bg-gray-300"
                 >

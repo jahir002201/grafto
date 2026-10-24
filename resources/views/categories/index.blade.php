@@ -8,7 +8,7 @@
             Categories
         </h1>
 
-        <a href="{{ route('categories.create') }}"
+        <a href="{{ route('dashboard.categories.create') }}"
            class="rounded-lg bg-blue-600 px-5 py-2.5 text-white shadow transition hover:bg-blue-700">
             + Create Category
         </a>
@@ -47,18 +47,18 @@
 
                         <div class="flex items-center justify-between">
 
-                            <a href="{{ url('categories/' . $category->id) }}"
+                            <a href="{{ url('dashboard/categories/' . $category->id) }}"
                                class="font-medium text-blue-600 hover:text-blue-800">
                                 View →
                             </a>
 
                             <div class="flex gap-2">
-                                <a href="{{ route('categories.edit', $category->id) }}"
+                                <a href="{{ route('dashboard.categories.edit', $category->id) }}"
                                    class="rounded-lg bg-yellow-500 px-4 py-2 text-white transition hover:bg-yellow-600">
                                     Edit
                                 </a>
 
-                                <form action="{{ route('categories.destroy', $category->id) }}"
+                                <form action="{{ route('dashboard.categories.destroy', $category->id) }}"
                                       method="POST"
                                       onsubmit="return confirm('Delete this category?')">
 
@@ -96,7 +96,7 @@
                 Create your first category to get started.
             </p>
 
-            <a href="{{ route('categories.create') }}"
+            <a href="{{ route('dashboard.categories.create') }}"
                class="mt-6 inline-block rounded-lg bg-blue-600 px-5 py-2.5 text-white hover:bg-blue-700">
                 Create Category
             </a>

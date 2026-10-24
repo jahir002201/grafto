@@ -44,10 +44,17 @@
 
             <div class="flex items-center gap-3">
                 @auth
-                    <a href="{{ route('home.profile.show') }}"
+                    <a href="{{ route('customer.profile.show') }}"
                        class="rounded-lg bg-green-700 px-4 py-2 font-semibold text-white hover:bg-green-800">
                         Profile
                     </a>
+                    <!-- logout -->
+                    <form action="{{ route('logout') }}" method="POST" class="inline">
+                        @csrf
+                        <button type="submit" class="rounded-lg bg-red-600 px-4 py-2 font-semibold text-white hover:bg-red-700">
+                            Logout
+                        </button>
+                    </form>
                 @else
                     <a href="{{ route('login') }}"
                        class="hidden font-semibold text-green-700 sm:block">
@@ -142,7 +149,7 @@
                 <h3 class="font-bold">Account</h3>
                 <div class="mt-4 flex flex-col gap-3 text-green-100">
                     @auth
-                        <a href="{{ route('home.profile.show') }}" class="hover:text-lime-400">
+                        <a href="{{ route('customer.profile.show') }}" class="hover:text-lime-400">
                             Profile
                         </a>
                     @else
