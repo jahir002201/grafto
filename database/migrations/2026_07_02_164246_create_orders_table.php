@@ -13,7 +13,20 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->decimal('total_price', 10, 2)->default(0);
+            $table->enum('status', [
+                'Not Paid',
+                'Ready To Ship',
+                'Shipped',
+                'Delivered',
+                'Canceled',
+            ])->default('Not Paid');
+            $table->string('shipping_address');
+            $table->string('shipping_phone');
+            $table->string('shipping_name');
             $table->timestamps();
+            $table->unique(['user_id', 'status']);
         });
     }
 
